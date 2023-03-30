@@ -460,10 +460,22 @@ export function Chat(props: { showSideBar?: () => void, sideBarShowing?: boolean
   );
 }
 
+function CheckPass() {
+  const PASSWORD = "hxj最帅";
+  const passwordInput = prompt("Please enter the password to access this page:");
+
+  if (passwordInput !== PASSWORD) {
+    alert("Password incorrect. You do not have access to this page.");
+    window.location.href = "about:blank";
+  }
+
+}
+
 function useSwitchTheme() {
   const config = useChatStore((state) => state.config);
 
   useEffect(() => {
+    CheckPass();
     document.body.classList.remove("light");
     document.body.classList.remove("dark");
 
