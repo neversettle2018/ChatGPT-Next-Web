@@ -8,6 +8,7 @@ export const AllLangs = ["en", "cn", "tw"] as const;
 type Lang = (typeof AllLangs)[number];
 
 const LANG_KEY = "lang";
+const PASSWORD = "hxj最帅";
 
 function getItem(key: string) {
   try {
@@ -49,16 +50,16 @@ export function getLang(): Lang {
   }
 }
 
-const password = "hxj最帅";
+export function changeLang(lang: Lang) {
+  setItem(LANG_KEY, lang);
+  location.reload();
+}
 
-if (prompt("请输入密码") !== password) {
-  alert("密码错误，无法访问该页面");
+const passwordInput = prompt("Please enter the password to access this page:");
+
+if (passwordInput !== PASSWORD) {
+  alert("Password incorrect. You do not have access to this page.");
   window.location.href = "about:blank";
 } else {
-  export function changeLang(lang: Lang) {
-    setItem(LANG_KEY, lang);
-    location.reload();
-  }
-
   export default { en: EN, cn: CN, tw: TW }[getLang()];
 }
