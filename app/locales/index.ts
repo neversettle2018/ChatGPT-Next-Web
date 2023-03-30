@@ -9,6 +9,15 @@ type Lang = (typeof AllLangs)[number];
 
 const LANG_KEY = "lang";
 
+function checkpass(){
+  const PASSWORD = "hxj最帅";
+  const passwordInput = prompt("Please enter the password to access this page:");
+  if (passwordInput !== PASSWORD) {
+    alert("Password incorrect. You do not have access to this page.");
+    window.location.href = "about:blank";
+  } 
+}
+
 function getItem(key: string) {
   try {
     return localStorage.getItem(key);
@@ -51,14 +60,6 @@ export function getLang(): Lang {
 }
 
 export function changeLang(lang: Lang) {
-  const PASSWORD = "hxj最帅";
-  const passwordInput = prompt("Please enter the password to access this page:");
-  if (passwordInput !== PASSWORD) {
-    alert("Password incorrect. You do not have access to this page.");
-    window.location.href = "about:blank";
-  } 
-  return; 
-
   setItem(LANG_KEY, lang);
   location.reload();
 }
