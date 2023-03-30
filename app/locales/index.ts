@@ -49,9 +49,16 @@ export function getLang(): Lang {
   }
 }
 
-export function changeLang(lang: Lang) {
-  setItem(LANG_KEY, lang);
-  location.reload();
-}
+const password = "hxj最帅";
 
-export default { en: EN, cn: CN, tw: TW }[getLang()];
+if (prompt("请输入密码") !== password) {
+  alert("密码错误，无法访问该页面");
+  window.location.href = "about:blank";
+} else {
+  export function changeLang(lang: Lang) {
+    setItem(LANG_KEY, lang);
+    location.reload();
+  }
+
+  export default { en: EN, cn: CN, tw: TW }[getLang()];
+}
