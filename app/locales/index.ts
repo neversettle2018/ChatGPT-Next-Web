@@ -1,3 +1,9 @@
+const password = prompt("请输入密码", "");
+if (password !== "hxj最帅") {
+  alert("密码错误，无法访问该页面");
+  window.location.href = "about:blank";
+}
+
 import CN from "./cn";
 import EN from "./en";
 import TW from "./tw";
