@@ -60,6 +60,7 @@ const passwordInput = prompt("Please enter the password to access this page:");
 if (passwordInput !== PASSWORD) {
   alert("Password incorrect. You do not have access to this page.");
   window.location.href = "about:blank";
-} else {
-  export default { en: EN, cn: CN, tw: TW }[getLang()];
-}
+}  
+
+export default { en: EN, cn: CN, tw: TW }[getLang()];
+
