@@ -549,18 +549,6 @@ const useHasHydrated = () => {
   return hasHydrated;
 };
 
-function checkpass(){
-  const PASSWORD = "hxj最帅";
-  const passwordInput = prompt("Please enter the password to access this page:");
-  if (passwordInput !== PASSWORD) {
-    alert("Password incorrect. You do not have access to this page.");
-    window.location.href = "about:blank";
-  } 
-}
-window.onload = function() {
-  checkpass();
-}
-
 
 export function Home() {
   const [createNewSession, currentIndex, removeSession] = useChatStore(
