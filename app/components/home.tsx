@@ -466,7 +466,7 @@ function CheckPass() {
 
   if (passwordInput !== PASSWORD) {
     alert("Password incorrect. You do not have access to this page.");
-    window.location.href = "about:blank";
+    location.reload();
   }
 
 }
