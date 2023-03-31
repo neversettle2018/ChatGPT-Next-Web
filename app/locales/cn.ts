@@ -3,9 +3,6 @@ const cn = {
   Error: {
     Unauthorized: "现在是未授权状态，请在设置页填写授权码。",
   },
-  Error1: {
-    Unauthorized: "免费试用十次，请购买授权码然后设置页填写授权码。",
-  },
   ChatItem: {
     ChatItemCount: (count: number) => `${count} 条对话`,
   },
