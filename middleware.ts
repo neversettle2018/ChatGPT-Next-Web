@@ -16,6 +16,7 @@ export function middleware(req: NextRequest, res: NextResponse) {
   console.log("[Auth] allowed hashed codes: ", [...ACCESS_CODES]);
   console.log("[Auth] got access code:", accessCode);
   console.log("[Auth] hashed access code:", hashedCode);
+  console.log("[Auth] ip:", ip);
   
     if (!ACCESS_CODES && !token) {
     const requests = ipRequests.get(ip) ?? 0;
