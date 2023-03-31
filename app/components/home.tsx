@@ -475,7 +475,7 @@ function useSwitchTheme() {
   const config = useChatStore((state) => state.config);
 
   useEffect(() => {
-    CheckPass();
+
     document.body.classList.remove("light");
     document.body.classList.remove("dark");
 
