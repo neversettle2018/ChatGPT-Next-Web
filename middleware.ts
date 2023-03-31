@@ -18,7 +18,7 @@ export function middleware(req: NextRequest, res: NextResponse) {
   console.log("[Auth] hashed access code:", hashedCode);
   console.log("[Auth] ip:", ip);
   
-  if (!token) {
+  if (!accessCode && !token) {
     console.log("invoke ip check...");
     const requests = ipRequests.get(ip) ?? 0;
     ipRequests.set(ip, requests + 1);
@@ -34,9 +34,7 @@ export function middleware(req: NextRequest, res: NextResponse) {
         }
       );
     }
-  } 
-
-  if (ACCESS_CODES.size > 0 && !ACCESS_CODES.has(hashedCode) && !token) {
+  } else if (ACCESS_CODES.size > 0 && !ACCESS_CODES.has(hashedCode) && !token) {
     console.log("invoke orig");
     return NextResponse.json(
       {
