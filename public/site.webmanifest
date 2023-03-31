@@ -1,6 +1,6 @@
 {
-    "name": "AI Chat",
-    "short_name": "AI Chat",
+    "name": "ChatGPT Next Web",
+    "short_name": "ChatGPT",
     "icons": [
       {
         "src": "/android-chrome-192x192.png",
