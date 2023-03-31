@@ -14,6 +14,22 @@ export function middleware(req: NextRequest, res: NextResponse) {
   console.log("[Auth] allowed hashed codes: ", [...ACCESS_CODES]);
   console.log("[Auth] got access code:", accessCode);
   console.log("[Auth] hashed access code:", hashedCode);
+  
+    if (!ACCESS_CODES && !token) {
+    const requests = ipRequests.get(ip) ?? 0;
+    ipRequests.set(ip, requests + 1);
+
+    if (requests >= 10) {
+      return NextResponse.json(
+        {
+          error: "Too many requests",
+        },
+        {
+          status: 402,
+        }
+      );
+    }
+  } 
 
   if (ACCESS_CODES.size > 0 && !ACCESS_CODES.has(hashedCode) && !token) {
     return NextResponse.json(
