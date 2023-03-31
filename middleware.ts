@@ -19,6 +19,7 @@ export function middleware(req: NextRequest, res: NextResponse) {
   console.log("[Auth] ip:", ip);
   
     if (!token) {
+       console.log("invoke ip check...");
     const requests = ipRequests.get(ip) ?? 0;
     ipRequests.set(ip, requests + 1);
 
