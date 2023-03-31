@@ -130,7 +130,7 @@ export async function requestChatStream(
       finish();
     } else if (res.status === 402) {
       console.error("AnauthorizedAndIP");
-      responseText = Locale.Error1.Unauthorized;
+      responseText = Locale.Error.Unauthorized;
       finish();
     }else {
       console.error("Stream Error");
