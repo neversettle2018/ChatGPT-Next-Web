@@ -8,7 +8,10 @@ const ipAccessCount = new Map();
 const ipAccessCountCookieName = "IP_ACCESS_COUNT";
 // 限制IP最大访问次数 
 const maxAccessCount = 10;
-
+// 自定义一个 MyCookies 接口，并继承 NextRequest 中的 RequestCookies 接口
+interface MyCookies extends RequestCookies {
+  IP_ACCESS_COUNT?: string;
+}
 
 export const config = {
   matcher: ["/api/chat", "/api/chat-stream"],
