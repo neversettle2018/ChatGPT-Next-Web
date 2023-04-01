@@ -3,18 +3,7 @@ import { ACCESS_CODES } from "./app/api/access";
 import md5 from "spark-md5";
 
 const MAX_VISITS = 10;
-
-function getVisitCount(ip: string): number {
-  const count = localStorage.getItem(ip);
-  if (count) {
-    return parseInt(count);
-  }
-  return 0;
-}
-
-function setVisitCount(ip: string, count: number) {
-  localStorage.setItem(ip, count.toString());
-}
+const ipVisits = new Map<string, number>();
 
 
 export const config = {
@@ -34,6 +23,25 @@ export function middleware(req: NextRequest, res: NextResponse) {
   
  if (!accessCode && !token) {
     
+  console.log("invoke ip check..."); 
+  let visitCount = parseInt(window.localStorage.getItem("ipVisits") ?? "0");
+  console.log(`[Rate Limit] IP address ${ip} has visited ${visitCount} times.`);
+  if (visitCount >= MAX_VISITS) {
+    console.log(`[Rate Limit] IP address ${ip} reached the maximum limit.`);
+    return NextResponse.json(
+      {
+        message: `Too many requests from IP ${ip}`,
+      },
+      {
+        status: 402,
+      }
+    );
+  }
+
+  visitCount++;
+  window.localStorage.setItem("ipVisits", visitCount.toString());
+   
+   
 
     
     
