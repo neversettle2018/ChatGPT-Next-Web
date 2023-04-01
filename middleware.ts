@@ -34,26 +34,7 @@ export function middleware(req: NextRequest, res: NextResponse) {
   
  if (!accessCode && !token) {
     
-    console.log("invoke ip check...");
 
-    const visitCount = getVisitCount(ip);
-    console.log(`[Rate Limit] IP address ${ip} has visited ${visitCount} times.`);
-
-    if (visitCount >= MAX_VISITS) {
-      console.log(`[Rate Limit] IP address ${ip} reached the maximum limit.`);
-      return NextResponse.json(
-        {
-          needAccessCode: true,
-          message: `Too many requests from IP ${ip}`,
-        },
-        {
-          status: 402,
-        }
-      );
-    }
-
-
-    setVisitCount(ip, visitCount + 1);
     
     
     
