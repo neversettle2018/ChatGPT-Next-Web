@@ -2,6 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { ACCESS_CODES } from "./app/api/access";
 import md5 from "spark-md5";
 
+const MAX_REQUEST_PER_IP = 10; // 每个 IP 最大请求次数
+const COOKIE_EXPIRE_TIME = 240 * 3600; // cookie 过期时间，单位为秒
+
+
 export const config = {
   matcher: ["/api/chat", "/api/chat-stream"],
 };
@@ -20,6 +24,35 @@ export function middleware(req: NextRequest, res: NextResponse) {
  if (!accessCode && !token) {
    
    console.log("invoke ip check...");
+   
+     // 获取该 IP 对应的 cookie 值
+  const cookies = req.cookies();
+  let requestCount = cookies[ip] ? parseInt(cookies[ip]) : 0;
+
+  // 判断是否需要更新 cookie
+  if (!cookies[ip]) {
+    res.cookie(ip, "1", {
+      maxAge: COOKIE_EXPIRE_TIME * 1000,
+    });
+  } else {
+    requestCount++;
+    res.cookie(ip, requestCount.toString(), {
+      maxAge: COOKIE_EXPIRE_TIME * 1000,
+    });
+  }
+
+  // 判断是否达到最大请求次数
+  if (requestCount >= MAX_REQUEST_PER_IP) {
+    return NextResponse.json(
+      {
+        needAccessCode: true,
+        error: "Too many requests from your IP. Please try again later.",
+      },
+      {
+        status: 402,
+      }
+    );
+  } 
 
     
 
