@@ -21,10 +21,10 @@ export function middleware(req: NextRequest, res: NextResponse) {
   if (!accessCode && !token) {
     
      console.log("invoke ip check...");
-     console.log("ip times:", ipVisits[ip] );
     
      // check number of visits by IP
       if(ip in ipVisits && ipVisits[ip] >= 10) {
+        console.log(`[Rate Limit] IP address ${ip} reached the maximum limit.`);
         return NextResponse.json(
           {
             message: 'Sorry! You have reached the maximum limit of visits from this IP address',
@@ -35,6 +35,7 @@ export function middleware(req: NextRequest, res: NextResponse) {
         );
       } else {
         ipVisits[ip] = (ipVisits[ip] || 0) + 1;
+        console.log(`[Rate Limit] IP address ${ip} has visited ${ipVisits[ip]} times.`);
       }
     
     
