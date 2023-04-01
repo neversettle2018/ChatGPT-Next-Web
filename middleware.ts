@@ -25,7 +25,7 @@ function setItem(key: string, value: string) {
 }
 
 export function counter(key: string) {
-  const counter = create<AccessControlStore>()(
+  const counter = create<>()(
     persist(
       (set, get) => (
         2
