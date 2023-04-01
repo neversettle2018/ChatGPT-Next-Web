@@ -21,7 +21,7 @@
     ],
     "paths": {
       "@/*": ["./*"], // 这是您已经有的配置项
-      "node-localstorage": ["./node_modules/node-localstorage/lib/localStorage"]
+      "node-localstorage": ["node-localstorage"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
