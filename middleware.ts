@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { ACCESS_CODES } from "./app/api/access";
 import md5 from "spark-md5";
-import { LocalStorage } from 'node-localstorage';
 
 export const config = {
   matcher: ["/api/chat", "/api/chat-stream"],
