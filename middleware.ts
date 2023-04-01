@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { ACCESS_CODES } from "./app/api/access";
 import md5 from "spark-md5";
-import CN from "./cn";
-import EN from "./en";
-import TW from "./tw";
+import CN from "app/locales/cn";
+import EN from "app/locales/en";
+import TW from "app/locales/tw";
 
 export const config = {
   matcher: ["/api/chat", "/api/chat-stream"],
