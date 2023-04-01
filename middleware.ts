@@ -11,7 +11,7 @@ export const config = {
 };
 
 
-/ 声明全局变量，保存 IP 访问次数。
+// 声明全局变量，保存 IP 访问次数。
 const ipCountRecord: Record<string, number> = {};
 interface CustomCookies extends RequestCookies {
   // 通过泛型将 cookie 值类型更改为 number，避免出现 Element implicitly has an 'any' type 错误。
