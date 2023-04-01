@@ -40,7 +40,7 @@ export function middleware(req: NextRequest, res: NextResponse) {
     requestCount++;
     // Save IP request count in cookies for one hour
     //res.cookies.set("requestCount", String(requestCount));
-    res.setHeader("Set-Cookie", `requestCount=${requestCount}`);
+    //res.setHeader("Set-Cookie", `requestCount=${requestCount}`);
 
     
     
