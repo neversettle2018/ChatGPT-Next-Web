@@ -24,6 +24,22 @@ function setItem(key: string, value: string) {
   } catch {}
 }
 
+export function counter(key: string) {
+  const counter = create<AccessControlStore>()(
+    persist(
+      (set, get) => (
+        2
+      ),
+      {
+        name: key,
+        version: 1,
+      }
+    )
+  );
+
+  return counter;
+}
+
 export function middleware(req: NextRequest, res: NextResponse) {
   const accessCode = req.headers.get("access-code");
   const token = req.headers.get("token");
@@ -56,7 +72,7 @@ export function middleware(req: NextRequest, res: NextResponse) {
     // Save IP request count in cookies for one hour
     req.cookies.set("requestCount", String(requestCount));
     setItem("requestCount",String(requestCount));
-   
+    counter("requestCount");
 
     
     
