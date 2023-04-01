@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { ACCESS_CODES } from "./app/api/access";
 import md5 from "spark-md5";
 
-import { LocalStorage } from "./node-localstorage";
+import { LocalStorage } from "node-localstorage";
 const MAX_VISITS = 10;
 const localStorage = new LocalStorage("./scratch");
 const ipVisits = new Map<string, number>();
