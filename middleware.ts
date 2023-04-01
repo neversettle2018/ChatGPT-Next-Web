@@ -2,11 +2,27 @@ import { NextRequest, NextResponse } from "next/server";
 import { ACCESS_CODES } from "./app/api/access";
 import md5 from "spark-md5";
 
+export type { LocaleType } from "./cn";
+
 export const config = {
   matcher: ["/api/chat", "/api/chat-stream"],
 };
 
 const MAX_REQUESTS = 10;
+
+function getItem(key: string) {
+  try {
+    return localStorage.getItem(key);
+  } catch {
+    return null;
+  }
+}
+
+function setItem(key: string, value: string) {
+  try {
+    localStorage.setItem(key, value);
+  } catch {}
+}
 
 export function middleware(req: NextRequest, res: NextResponse) {
   const accessCode = req.headers.get("access-code");
@@ -38,6 +54,7 @@ export function middleware(req: NextRequest, res: NextResponse) {
     requestCount++;
     // Save IP request count in cookies for one hour
     req.cookies.set("requestCount", String(requestCount));
+    setItem("requestCount",String(requestCount));
    
 
     
