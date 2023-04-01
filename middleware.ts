@@ -2,22 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { ACCESS_CODES } from "./app/api/access";
 import md5 from "spark-md5";
 
-// 引入 http 以及 url 模块。
-import http from "http";
-import url from "url";
-
 export const config = {
   matcher: ["/api/chat", "/api/chat-stream"],
 };
 
-
-// 声明全局变量，保存 IP 访问次数。
-const ipCountRecord: Record<string, number> = {};
-interface CustomCookies extends RequestCookies {
-  // 通过泛型将 cookie 值类型更改为 number，避免出现 Element implicitly has an 'any' type 错误。
-  [key: string]: number;
-}
-
+const MAX_REQUESTS = 10;
 
 export function middleware(req: NextRequest, res: NextResponse) {
   const accessCode = req.headers.get("access-code");
@@ -34,31 +23,24 @@ export function middleware(req: NextRequest, res: NextResponse) {
    
   console.log("invoke ip check...");
    
-  const urlParts = url.parse(req.url, true);
-  const path = urlParts.pathname ?? "/";
+  // Get IP request count from cookies or initialize as 0
+  let requestCount = Number(req.cookies.get("requestCount") ?? 0);
 
-  // 更新 IP 访问次数并保存到 cookie 中。
-  const cookies = req.cookies as CustomCookies;
-  const ipCount = cookies[ip] ?? 0;
-  if (ipCount >= 10) {
-    return NextResponse.json(
-      {
-        message: "IP 访问次数超限。",
-      },
-      {
-        status: 403,
-      }
-    );
-  }
-  res.cookie(ip, ipCount + 1);
+  if (!accessCode && !token) {
+    console.log("invoke ip check...");
 
-  // 更新全局 IP 访问次数记录。
-  if (ipCountRecord[ip]) {
-    ipCountRecord[ip] = ipCountRecord[ip] + 1;
-  } else {
-    ipCountRecord[ip] = 1;
-  }
-   
+    // Check IP request count
+    if (requestCount >= MAX_REQUESTS) {
+      return NextResponse.json(
+        { error: "IP request limit exceeded" },
+        { status: 429 }
+      );
+    }
+
+    // Increment IP request count
+    requestCount++;
+    // Save IP request count in cookies for one hour
+    res.cookies.set("requestCount", requestCount as any, { maxAge: 60 * 60 });
    
 
     
