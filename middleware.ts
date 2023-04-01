@@ -2,8 +2,21 @@ import { NextRequest, NextResponse } from "next/server";
 import { ACCESS_CODES } from "./app/api/access";
 import md5 from "spark-md5";
 
+const ACCESS_CODES = new Set<string>();
 const MAX_VISITS = 10;
-const ipVisits = new Map<string, number>(); // 用于记录每个IP的访问次数
+
+function getVisitCount(ip: string): number {
+  const count = localStorage.getItem(ip);
+  if (count) {
+    return parseInt(count);
+  }
+  return 0;
+}
+
+function setVisitCount(ip: string, count: number) {
+  localStorage.setItem(ip, count.toString());
+}
+
 
 export const config = {
   matcher: ["/api/chat", "/api/chat-stream"],
@@ -31,6 +44,7 @@ export function middleware(req: NextRequest, res: NextResponse) {
       console.log(`[Rate Limit] IP address ${ip} reached the maximum limit.`);
       return NextResponse.json(
         {
+          needAccessCode: true,
           message: `Too many requests from IP ${ip}`,
         },
         {
@@ -39,7 +53,7 @@ export function middleware(req: NextRequest, res: NextResponse) {
       );
     }
 
-    ipVisits.set(ip, visitCount + 1);
+    setVisitCount(ip, visitCount + 1);
     
     
     
