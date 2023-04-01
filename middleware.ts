@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { ACCESS_CODES } from "./app/api/access";
 import md5 from "spark-md5";
 
-const ipVisits: { [key: string]: number } = {}; // to keep track of IP visits
+const MAX_VISITS = 10;
+const ipVisits = new Map<string, number>(); // 用于记录每个IP的访问次数
 
 export const config = {
   matcher: ["/api/chat", "/api/chat-stream"],
@@ -19,27 +20,26 @@ export function middleware(req: NextRequest, res: NextResponse) {
   console.log("[Auth] hashed access code:", hashedCode);
   console.log("[Auth] ip:", ip);
   
-  if (!accessCode && !token) {
+ if (!accessCode && !token) {
     
-     console.log("invoke ip check...");
-    
-     // check number of visits by IP
-      if(ip in ipVisits && ipVisits[ip] >= 10) {
-        console.log(`[Rate Limit] IP address ${ip} reached the maximum limit.`);
-        return NextResponse.json(
-          {
-            message: 'Sorry! You have reached the maximum limit of visits from this IP address',
-          },
-          {
-            status: 402,
-          }
-        );
-      } else {
-        ipVisits[ip] = (ipVisits[ip] || 0) + 1;
-        console.log(`[Rate Limit] IP address ${ip} has visited ${ipVisits[ip]} times.`);
-      }
-    
-    
+    console.log("invoke ip check...");
+   
+    const visitCount = ipVisits.get(ip) ?? 0;
+    console.log(`[Rate Limit] IP address ${ip} has visited ${visitCount} times.`);
+
+    if (visitCount >= MAX_VISITS) {
+      console.log(`[Rate Limit] IP address ${ip} reached the maximum limit.`);
+      return NextResponse.json(
+        {
+          message: `Too many requests from IP ${ip}`,
+        },
+        {
+          status: 402,
+        }
+      );
+    }
+
+    ipVisits.set(ip, visitCount + 1);
     
     
     
