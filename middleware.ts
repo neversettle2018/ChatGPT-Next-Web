@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { ACCESS_CODES } from "./app/api/access";
 import md5 from "spark-md5";
-import { cookie } from "cookie";
 
 export const config = {
   matcher: ["/api/chat", "/api/chat-stream"],
@@ -38,7 +37,7 @@ export function middleware(req: NextRequest, res: NextResponse) {
     // Increment IP request count
     requestCount++;
     // Save IP request count in cookies for one hour
-    res.setHeader("Set-Cookie", `requestCount=${requestCount};Max-Age=3600;Path=/;HttpOnly`);
+   
 
 
 
