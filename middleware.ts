@@ -19,15 +19,12 @@ export function middleware(req: NextRequest, res: NextResponse) {
   console.log("[Auth] hashed access code:", hashedCode);
   console.log("[Auth] ip:", ip);
   
+ // Get IP request count from cookies or initialize as 0
+ let requestCount = Number(req.cookies.get("requestCount") ?? 0);
+  
  if (!accessCode && !token) {
    
   console.log("invoke ip check...");
-   
-  // Get IP request count from cookies or initialize as 0
-  let requestCount = Number(req.cookies.get("requestCount") ?? 0);
-
-  if (!accessCode && !token) {
-    console.log("invoke ip check...");
 
     // Check IP request count
     if (requestCount >= MAX_REQUESTS) {
