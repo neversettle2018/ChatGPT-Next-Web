@@ -41,6 +41,8 @@ export function middleware(req: NextRequest, res: NextResponse) {
     // Save IP request count in cookies for one hour
     //res.cookies.set("requestCount", String(requestCount),{ maxAge: 72 * 3600 });
     //res.setHeader("Set-Cookie", `requestCount=${requestCount}`);
+    res.setHeader("Set-Cookie", `requestCount=${requestCount};Max-Age=3600;Path=/;HttpOnly`);
+
 
     
     
