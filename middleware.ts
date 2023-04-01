@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { ACCESS_CODES } from "./app/api/access";
 import md5 from "spark-md5";
 
-const ACCESS_CODES = new Set<string>();
 const MAX_VISITS = 10;
 
 function getVisitCount(ip: string): number {
