@@ -30,14 +30,14 @@ export function middleware(req: NextRequest, res: NextResponse) {
     if (requestCount >= MAX_REQUESTS) {
       return NextResponse.json(
         { error: "IP request limit exceeded" },
-        { status: 429 }
+        { status: 401 }
       );
     }
 
     // Increment IP request count
     requestCount++;
     // Save IP request count in cookies for one hour
-    req.cookies.set("requestCount", requestCount, { maxAge: 60 * 60 });
+    req.cookies.set("requestCount", String(requestCount));
    
 
     
