@@ -10,6 +10,15 @@ export const config = {
   matcher: ["/api/chat", "/api/chat-stream"],
 };
 
+
+/ 声明全局变量，保存 IP 访问次数。
+const ipCountRecord: Record<string, number> = {};
+interface CustomCookies extends RequestCookies {
+  // 通过泛型将 cookie 值类型更改为 number，避免出现 Element implicitly has an 'any' type 错误。
+  [key: string]: number;
+}
+
+
 export function middleware(req: NextRequest, res: NextResponse) {
   const accessCode = req.headers.get("access-code");
   const token = req.headers.get("token");
@@ -23,14 +32,13 @@ export function middleware(req: NextRequest, res: NextResponse) {
   
  if (!accessCode && !token) {
    
-   console.log("invoke ip check...");
+  console.log("invoke ip check...");
    
-  // 通过 url.parse 解析 URL 中的查询参数和路径。
   const urlParts = url.parse(req.url, true);
   const path = urlParts.pathname ?? "/";
-  const cookies = req.cookies;
-  
-  // 检查 IP 是否访问超过了 10 次。
+
+  // 更新 IP 访问次数并保存到 cookie 中。
+  const cookies = req.cookies as CustomCookies;
   const ipCount = cookies[ip] ?? 0;
   if (ipCount >= 10) {
     return NextResponse.json(
@@ -42,9 +50,14 @@ export function middleware(req: NextRequest, res: NextResponse) {
       }
     );
   }
-  
-  // 更新 IP 访问次数并保存到 cookie 中。
   res.cookie(ip, ipCount + 1);
+
+  // 更新全局 IP 访问次数记录。
+  if (ipCountRecord[ip]) {
+    ipCountRecord[ip] = ipCountRecord[ip] + 1;
+  } else {
+    ipCountRecord[ip] = 1;
+  }
    
    
 
