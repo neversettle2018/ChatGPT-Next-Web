@@ -39,11 +39,7 @@ export function middleware(req: NextRequest, res: NextResponse) {
     // Increment IP request count
     requestCount++;
     // Save IP request count in cookies for one hour
-    setCookie({ res }, 'requestCount', requestCount.toString(), {
-      maxAge: 3600,
-      path: '/',
-      httpOnly: true,
-    });
+
 
 
     
