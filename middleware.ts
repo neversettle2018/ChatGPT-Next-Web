@@ -27,7 +27,8 @@ export function middleware(req: NextRequest, res: NextResponse) {
    
      // 获取该 IP 对应的 cookie 值
   const cookies = req.cookies;
-  let requestCount = cookies[ip] ? parseInt(cookies[ip]) : 0;
+  let requestCount = cookies[ip as keyof typeof cookies] ? parseInt(cookies[ip as keyof typeof cookies]) : 0;
+
 
   // 判断是否需要更新 cookie
   if (!cookies[ip]) {
