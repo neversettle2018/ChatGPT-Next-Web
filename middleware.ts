@@ -2,12 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { ACCESS_CODES } from "./app/api/access";
 import md5 from "spark-md5";
 
-import { LocalStorage } from "node-localstorage";
-const MAX_VISITS = 10;
-const localStorage = new LocalStorage("./scratch");
-const ipVisits = new Map<string, number>();
-
-
 export const config = {
   matcher: ["/api/chat", "/api/chat-stream"],
 };
@@ -26,23 +20,7 @@ export function middleware(req: NextRequest, res: NextResponse) {
  if (!accessCode && !token) {
    
    console.log("invoke ip check...");
-  let visitCount = parseInt(localStorage.getItem(ipVisits.get(ip)?.toString() ?? "0"));
-  console.log(`[Rate Limit] IP address ${ip} has visited ${visitCount} times.`);
-  if (visitCount >= MAX_VISITS) {
-    console.log(`[Rate Limit] IP address ${ip} reached the maximum limit.`);
-    return NextResponse.json(
-      {
-         needAccessCode: true,
-        message: `Too many requests from IP ${ip}`,
-      },
-      {
-        status: 402,
-      }
-    );
-  }
 
-  visitCount++;
-  localStorage.setItem(ipVisits.get(ip)?.toString() ?? "", visitCount.toString());
     
 
    
