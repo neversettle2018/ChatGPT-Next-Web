@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { ACCESS_CODES } from "./app/api/access";
 import md5 from "spark-md5";
-import type { NextApiResponse } from "next";
+import { setCookie } from 'nookies';
 
 
 export const config = {
@@ -39,9 +39,11 @@ export function middleware(req: NextRequest, res: NextResponse) {
     // Increment IP request count
     requestCount++;
     // Save IP request count in cookies for one hour
-    //res.cookies.set("requestCount", String(requestCount),{ maxAge: 72 * 3600 });
-    //res.setHeader("Set-Cookie", `requestCount=${requestCount}`);
-    res.setHeader("Set-Cookie", `requestCount=${requestCount};Max-Age=3600;Path=/;HttpOnly`);
+    setCookie({ res }, 'requestCount', requestCount.toString(), {
+      maxAge: 3600,
+      path: '/',
+      httpOnly: true,
+    });
 
 
     
