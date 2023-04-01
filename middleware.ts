@@ -1,42 +1,51 @@
 import { NextRequest, NextResponse } from "next/server";
 import { ACCESS_CODES } from "./app/api/access";
 import md5 from "spark-md5";
+import { LocalStorage } from 'node-localstorage';
 
 export const config = {
   matcher: ["/api/chat", "/api/chat-stream"],
 };
 
-const MAX_REQUESTS = 10;
+const IP_LIMIT = 10;
 
 export function middleware(req: NextRequest, res: NextResponse) {
   const accessCode = req.headers.get("access-code");
   const token = req.headers.get("token");
   const hashedCode = md5.hash(accessCode ?? "").trim();
-  const ip = req.headers.get("x-forwarded-for") ?? "";
+  const ipAddress = req.headers.get("x-forwarded-for") ?? "";
 
   console.log("[Auth] allowed hashed codes: ", [...ACCESS_CODES]);
   console.log("[Auth] got access code:", accessCode);
   console.log("[Auth] hashed access code:", hashedCode);
-  console.log("[Auth] ip:", ip);
+  console.log("[Auth] ip:", ipAddress);
   
  // Get IP request count from cookies or initialize as 0
  let requestCount = Number(req.cookies.get("requestCount") ?? 0);
   
  if (!accessCode && !token) {
    
-  console.log("invoke ip check...");
+ console.log("invoke ip check...");
 
-    // Check IP request count
-    if (requestCount >= MAX_REQUESTS) {
-      return NextResponse.json(
-        { error: "IP request limit exceeded" },
-        { status: 401 }
-      );
-    }
+  // Get the current visit count for this IP or initialize it to zero
+  let visitCount = Number(localStorage.getItem(ipAddress)) || 0;
 
-    // Increment IP request count
-    requestCount++;
-    // Save IP request count in cookies for one hour
+  console.log("[IP Check] initial visit count:", visitCount);
+
+  // Increment the visit count and check whether it exceeds the limit
+  visitCount++;
+  if (visitCount > IP_LIMIT) {
+    console.log('[IP Check] IP address has reached maximum access limit');
+    return NextResponse.json(
+      { message: 'Too many requests from this IP address. Please try again later.' },
+      { status: 401 },
+    );
+  }
+
+  // Save the updated visit count in localStorage
+  localStorage.setItem(ipAddress, visitCount.toString());
+
+  console.log("[IP Check] updated visit count:", visitCount);
    
 
 
